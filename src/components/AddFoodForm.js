@@ -1,68 +1,63 @@
-import { Divider, Input } from 'antd';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-// Iteration 4
-function AddFoodForm({ setTheFood, theFood }) {
-  const [newName, setNewName] = useState('');
-  const [newImage, setNewImage] = useState('');
-  const [newCalories, setNewCalories] = useState(0);
-  const [newServings, setNewServings] = useState(0);
+export default function AddFoodForm(props) {
+  const [isHide, setIsHide] = useState(false);
+  const [addedFood, setAddedFood] = useState({
+    name: '',
+    image: 'https://via.placeholder.com/30x30',
+    calories: '',
+    servings: '',
+  });
 
-  const newFood = {
-    name: newName,
-    image: newImage,
-    calories: newCalories,
-    servings: newServings,
+  const handleInputChange = (event) => {
+    const value = event.target.value;
+    setAddedFood({ ...addedFood, [event.target.name]: value });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(newServings);
-    setTheFood([...theFood, newFood]);
-    setNewName('');
-    setNewImage('');
-    setNewCalories(0);
-    setNewServings(0);
+  const submitButton = (event) => {
+    props.handleSubmit(event, addedFood);
+  };
+
+  const handleHide = () => {
+    setIsHide(!isHide);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Divider>Add Food Entry</Divider>
+    <div class="AddFoodForm">
+      <div className={isHide ? 'show' : 'hide'}>
+        <form onSubmit={submitButton}>
+          <label>Name</label>
+          <input
+            name="name"
+            value={addedFood.name}
+            type="text"
+            onChange={handleInputChange}
+          />
+          <label>Image</label>
+          <input
+            name="image"
+            value={addedFood.image}
+            type="text"
+            placeholder="https://via.placeholder.com/30x30"
+            onChange={handleInputChange}
+          />
+          <label>Calories</label>
+          <input
+            name="calories"
+            value={addedFood.calories}
+            type="number"
+            onChange={handleInputChange}
+          />
 
-      <label>Name</label>
-      <Input
-        value={newName}
-        type="text"
-        onChange={(event) => {
-          setNewName(event.target.value);
-        }}
-      />
+          <button type="submit" id="buttonCreate">
+            Create
+          </button>
+        </form>
+      </div>
 
-      <label>Image</label>
-
-      <Input
-        value={newImage}
-        type="text"
-        onChange={(event) => setNewImage(event.target.value)}
-      />
-
-      <label>Calories</label>
-      <Input
-        value={newCalories}
-        type="number"
-        onChange={(event) => setNewCalories(event.target.value)}
-      />
-
-      <label>Servings</label>
-      <Input
-        value={newServings}
-        type="number"
-        onChange={(event) => setNewServings(event.target.value)}
-      />
-
-      <button type="submit">Create</button>
-    </form>
+      <button id={isHide ? 'hide' : 'show'} onClick={handleHide}>
+        {isHide ? 'Hide' : 'Show'}
+      </button>
+    </div>
   );
 }
-
-export default AddFoodForm;

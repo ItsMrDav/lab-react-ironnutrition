@@ -1,26 +1,58 @@
-import { Card, Col, Button } from 'antd';
+import React, { useState } from 'react';
 
-// Iteration 2
-function FoodBox({ foodProp }) {
+export default function FoodBox(props) {
+  const [amount, setAmount] = useState(1);
+
+  const food = props.food;
+
+  const handleChangeAmount = (event) => {
+    setAmount(event.target.value);
+  };
+
   return (
-    <Col>
-      <Card
-        title={foodProp.name}
-        style={{ width: 230, height: 300, margin: 10 }}
-      >
-        <img src={foodProp.image} height={60} alt="foodProp" />
-        <p>Calories: {foodProp.calories}</p>
-        <p>Servings: {foodProp.servings}</p>
-        <p>
-          <b>
-            Total Calories: {foodProp.calories} * {foodProp.serving}{' '}
-          </b>{' '}
-          kcal
-        </p>
-        <Button type="primary"> Delete </Button>
-      </Card>
-    </Col>
+    <div className="box">
+      <article className="media">
+        <div className="media-left">
+          <figure className="image is-64x64">
+            <img src={food.image} alt={food.name} />
+          </figure>
+        </div>
+        <div className="media-content">
+          <div className="content">
+            <p>
+              <strong>{food.name}</strong> <br />
+              <small>{food.calories} cal</small>
+            </p>
+          </div>
+        </div>
+        <div className="media-right">
+          <div className="field has-addons">
+            <div className="control">
+              <input
+                className="input"
+                type="number"
+                value={amount}
+                onChange={(event) => {
+                  handleChangeAmount(event);
+                }}
+              />
+            </div>
+            <div className="control">
+              <button
+                className="button is-info"
+                onClick={() => {
+                  props.onAddFood({
+                    food: food,
+                    amount: amount,
+                  });
+                }}
+              >
+                +
+              </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </div>
   );
 }
-
-export default FoodBox;
